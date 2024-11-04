@@ -1,0 +1,83 @@
+:title: Polymorphism
+:revealjs_theme: solarized
+:source-highlighter: highlight.js
+
+= Inheritance and Polymorphism
+
+== Inheritance
+
+Child classes __inherit__ methods and attributes of super classes!
+
+=== Simple inheritance
+
+[source, java]
+----
+public class Main {
+    public class Super {
+        public void fn() {
+            System.out.println("I'm super!");
+        }
+    }
+
+    public class Child extends Super {
+    }
+
+    public static void main(String[] args) {
+        Child c = Child();
+        c.fn(); // prints I'm Super!
+    }
+}
+----
+
+
+=== Overriding a method I
+Child classes can override Super class methods and attributes.
+
+[source, java]
+----
+public class Main {
+    public class Super {
+        public void fn() {
+            System.out.println("I'm Super!");
+        }
+    }
+
+    public class Child extends Super {
+        public void fn() {
+            System.out.println("I'm child!");
+        }
+    }
+
+    public static void main(String[] args) {
+        Child c = Child();
+        c.fn(); // prints I'm child!
+    }
+}
+----
+
+=== Overriding a method II
+Child classes can directly refer to their super classes.
+
+[source, java]
+----
+public class Main {
+    public class Super {
+        public void fn() {
+            System.out.println("I'm Super!");
+        }
+    }
+
+    public class Child extends Super {
+        @Override
+        public void fn() {
+            super.fn();
+            System.out.println("I'm child!");
+        }
+    }
+
+    public static void main(String[] args) {
+        Child c = Child();
+        c.fn(); // prints I'm Super!\nI'm child!
+    }
+}
+----
