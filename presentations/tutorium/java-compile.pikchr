@@ -1,0 +1,9 @@
+file "Main.java"
+arrow
+box "javac"
+arrow
+file "Main.class"
+arrow
+box "jar"
+arrow
+file "Main.jar"
