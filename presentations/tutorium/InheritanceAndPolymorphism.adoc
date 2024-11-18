@@ -1,6 +1,7 @@
 :title: Polymorphism
 :revealjs_theme: solarized
 :source-highlighter: highlight.js
+:stem: latexmath
 
 = Inheritance and Polymorphism
 
@@ -8,6 +9,16 @@
 
 Child classes __inherit__ methods and attributes of super classes!
 
+=== Simple Inheritance
+
+[mermaid]
+----
+classDiagram
+
+  class Super
+  class Child
+  Super <|-- Child
+----
 === Simple inheritance
 
 [source, java]
@@ -78,6 +89,389 @@ public class Main {
     public static void main(String[] args) {
         Child c = Child();
         c.fn(); // prints I'm Super!\nI'm child!
+    }
+}
+----
+
+== Polymorphism
+
+=== Type Systems
+
+- A type system is a set of types stem:[T] and an order stem:[\leq]: stem:[\mathcal{T} = (T, \leq)].
+- Let \(A, B \in T\): we say \(B\) is a subtype of \(A\) iff \(B \leq A\).
+- Most often \(\leq\) define explicitly by programmers, e.g., by stating
++
+[source, java]
+----
+public class B extends A {}
+----
++
+This is called *nominal* polymorphism.
+- But there are other possibilities to define stem:[\leq]
+
+=== An alternative subtype relation
+We could define stem:[\leq] like this:
+
+Let stem:[N] denote all possible member names and stem:[m(A) \subset N \times T] the members of stem:[A] given by name and type stem:[(n, t) \in N \times T].
+Then we define for stem:[A, B \in T]:
+
+[stem]
+++++
+A \leq B \Leftrightarrow  m(A) \subset m(B)
+++++
+
+This is called *structural* subtyping.
+Intuitively stem:[A \leq B] if stem:[A]'s public interface is the same as the interface of stem:[B].
+
+
+=== Motivational Example
+
+[mermaid]
+----
+classDiagram
+  class Task {
+    - args: List~Object~
+    + start()
+    + hasFinished()
+    + getResult(): Result
+  }
+
+  class Result {
+    - valid: boolean
+    - value: Object
+    + isValid(): boolean
+    + getValue(): Object
+  }
+
+Task --> Result
+
+PrintTask --|> Task
+SaveToDatabaseTask --|> Task
+CheckWebsiteTask --|> Task
+
+class TaskRunner {
+   maxConcurrentTasks: int
+  +add(t: Task)
+  +run()
+  +getFinished(): List~Task~
+}
+
+TaskRunner --> Task
+----
+
+We can easily add new tasks.
+Our types help to express a contract, that every new task has to fulfill so the `TaskRunner` can start it and check its status.
+If we violate that contract, the Java compiler will tell us.
+
+=== Java implementation Result
+
+[source, java]
+----
+public class Result {
+    private boolean valid;
+    private Object value;
+
+    private Result(boolean valid, Object value) { // <1>
+        this.valid = valid;
+        this.value = value;
+    }
+
+    public isValid() {return valid;}
+
+    public getValue() {return value;}
+
+    public static class Success extends Result {
+        public Success(Object value) {
+            super(false, value);
+        }
+    }
+
+    public static class Fail extends Result {
+        public Fail() {
+            super(false, null);
+        }
+    }
+}
+----
+<1> constructor cannot be called from outside, but only by `Fail` and `Success`
+
+=== Java implementation Task
+
+[source, java]
+----
+public class Task {
+    protected List args; // <1>
+
+    public Task(List args) {
+        this.args = args;
+    }
+
+    public boolean hasFinished() {
+        return True;
+    }
+
+    public start() {}
+
+    public getResult() {
+        return new Result.Success(valueOf(0));
+    }
+}
+----
+<1> inheriting classes may access this field
+
+=== Java implementation PrintTask
+
+[source,java]
+----
+import printing.Printer;
+import printing.Document;import java.io.IOError;import java.io.IOException;
+
+public class PrintTask extends Task {
+    private boolean success;
+    private boolean finished;
+
+    public PrintTask(List documents) {
+        super(documents);
+        success = false;
+        finished = false;
+    }
+
+    public start() {
+        finished = false;
+        try (var p = new Printer()){
+            for (var doc : args) {
+                p.print((Document)doc);
+            }
+            success = true;
+
+        } catch (IOException e) {
+            success = false;
+        } finally{
+            finished = true;
+        }
+    }
+
+    public Result getResult() {
+        if (success) {
+            return new Result.Success(valueOf(args.length()));
+        }
+        return new Result.Fail();
+    }
+}
+----
+
+=== But what about other languages?
+
+- We can implement the same structure in any language.
+- We are not interested in types, we are interested in contracts.
+- We do not need a language with a type system to implement such a structure.
+- We do not even need an object-oriented language.
+
+=== Example in Python without static types and objects
+
+[source, python]
+----
+from printer import print
+
+def fail():
+    return (False, None)
+
+def success(args):
+    return (True, args)
+
+def print(args, state):
+    try:
+        for doc in args:
+            print(doc)
+        state['result'] = success(len(args))
+    except IOError:
+        state['result'] = fail()
+    finally:
+        state['has_finished'] = True
+----
+
+Shorter, but not easier to read or use.
+
+=== But there is a Problem
+- `Task` solely represents the contract
+- We do not want `Task` to implement the methods
+- Solutions are `abstract` and `interface`
+
+=== Abstract Keyword I
+
+We change Task to
+
+[source, java]
+----
+abstract public class Task {
+    protected List args;
+
+    protected Task(List args) {
+        this.args = args;
+    }  // <1>
+
+    abstract public Result getResult();
+
+    abstract public boolean hasFinished();
+
+    abstract public void start();
+}
+----
+<1> constructor can only be used by child classes
+
+=== Abstract Keyword II
+- Classes with `abstract` methods cannot be instantiated, i.e., `new Task(...)` will not compile.
+- Non-abstract classes inheriting from abstract classes have to implement all abstract methods. (Compiler checks this)
+
+=== Multiple Inheritance - Diamond Problem
+
+Which function do we call on `D.fn()`?
+
+[mermaid]
+----
+classDiagram
+class A { fn() }
+class B { fn() }
+class C { fn() }
+A <|-- B
+A <|-- C
+B <|-- D
+C <|-- D
+----
+
+
+=== Multiple Inheritance
+
+- Supporting multiple inheritance means solving the diamond problem by either
+    * guessing
+    * user defined order
+    * a mix of both
+- C++ is very explicit: you have to name the ancestor you want to use for resolution
+- Python is very implicit: search base classes in a specific order
+- Problem: method resolution algorithms can be intuitive, but hard to understand in edge cases
+
+=== Interfaces
+
+- Interfaces contain no implementations but just method names and signatures
+- Also called Protocols in some languages (python)
+- Similar to abstract classes with abstract members only
+- In general interfaces do not contain implementations
+    * Java 8 introduced default implementations: *only use when you know what you're doing*
+
+
+=== Defining an Interface
+
+[source, java]
+----
+public interface Task {
+    Result getResult(); // <1>
+    boolean hasFinished();
+    void start();
+}
+----
+
+<1> methods are public by default
+
+=== Using an Interface
+
+[source,java]
+----
+import printing.Printer;
+import printing.Document;
+import java.io.IOException;
+
+public class PrintTask implements Task { // <1>
+    private boolean success;
+    private boolean finished;
+    private List documents;
+
+    public PrintTask(List documents) {
+        this.documents = documents; // <2>
+        success = false;
+        finished = false;
+    }
+
+    public start() {
+        finished = false;
+        try (var p = new Printer()){
+            for (var doc : args) {
+                p.print((Document)doc);
+            }
+            success = true;
+
+        } catch (IOException e) {
+            success = false;
+        } finally{
+            finished = true;
+        }
+    }
+
+    public Result getResult() {
+        if (success) {
+            return new Result.Success(valueOf(args.length()));
+        }
+        return new Result.Fail();
+    }
+}
+----
+<1> replaced `extends` by `implements`
+<2> cannot call super class constructor anymore
+
+=== Multiple Interfaces I
+
+[source, java]
+----
+public interface Stoppable {
+    void stop();
+}
+----
+
+[source,java]
+----
+import printing.Printer;
+import printing.Document;
+import java.io.IOException;import java.util.Iterator;
+
+public class PrintTask implements Task, Stoppable {
+    private boolean success;
+    private boolean finished;
+    private List documents;
+    private boolean running;
+    private Iterator<Document> docsQueue;
+
+    public PrintTask(List documents) {
+        this.documents = documents; // <2>
+        success = false;
+        finished = false;
+        running = false;
+    }
+
+    public start() {
+
+        if (finished) {
+            docsQueue = documents.iterator();
+        }
+        finished = false;
+        running = true;
+        try (var p = new Printer()){
+            while (running && documents.hasNext()) {
+                Document current = documents.next();
+                p.print(current);
+            }
+            } catch (IOException e) {
+                success = false;
+            } finally{
+                finished = true;
+                running = false;
+            }
+        }
+    }
+
+    public Result getResult() {
+        if (success) {
+            return new Result.Success(valueOf(args.length()));
+        }
+        return new Result.Fail();
     }
 }
 ----
