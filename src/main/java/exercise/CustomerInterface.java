@@ -38,7 +38,8 @@ public class CustomerInterface {
         Integer pizzaType = scanner.nextInt();
         System.out.println("Wie viele möchten Sie?");
         Integer pizzaAnzahl = scanner.nextInt();
-        Bestellung = new Integer[]{pizzaType,pizzaAnzahl};
+        Bestellung.additem(Integer[]{pizzaType,pizzaAnzahl});
+
     }
     public void getBestellung(){
         System.out.println(Bestellung.toString()); //TODO: ausgliedern in Bestellungs Klasse
