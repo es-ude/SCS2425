@@ -1,14 +1,15 @@
 package exercise;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class CustomerInterface {
     public static Integer[] Bestellung;
 
-    public static void Console (){
+    public static void startBestellungsProzess(){
+        printAngebot();
         einlesenBestellung();
+        weitereBestellung();
     }
 
     private static void weitereBestellung() {
@@ -23,20 +24,16 @@ public class CustomerInterface {
             printAngebot();
         }
     }
-
     private static void printBestellung() {
         System.out.println(Arrays.toString(Bestellung));
     }
-
     private static void einlesenBestellung() {
-        printAngebot();
         System.out.println("Welche Pizza möchten Sie?");
         Scanner scanner = new Scanner(System.in);
         Integer pizzaType = scanner.nextInt();
         System.out.println("Wie viele möchten Sie?");
         Integer pizzaAnzahl = scanner.nextInt();
         Bestellung = new Integer[]{pizzaType,pizzaAnzahl};
-        weitereBestellung();
     }
     public static void getBestellung(){
         System.out.println(Bestellung.toString());
@@ -44,7 +41,7 @@ public class CustomerInterface {
 
     private static void printAngebot() {
         System.out.println("Willkommen in der Pizzaria");
-        String[] pizza ={"Magarhita", "Brokkoli", "Spinat"};
+        String[] pizza ={"Margarita", "Brokkoli", "Spinat"};
         //int[] preis ={10, 11, 12};
         for (int i = 0; i < pizza.length; i++) {
             System.out.print(i);
