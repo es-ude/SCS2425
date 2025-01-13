@@ -1,8 +1,8 @@
 package exercise;
 
-public class Angebot{
+public class Auswahl {
 
-    public Angebot (String[] pizzaArray){
+    public Auswahl(String[] pizzaArray){
         pizza = pizzaArray;
     }
 

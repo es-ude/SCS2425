@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class CustomerInterface {
-    private Angebot a;
+    private Auswahl AngebotsListePizza;
 
-    public CustomerInterface(Angebot angebot){
-        a = angebot;
+    public CustomerInterface(Auswahl auswahl){
+        AngebotsListePizza = auswahl;
     }
     public Integer[] Bestellung;
 
@@ -46,6 +46,6 @@ public class CustomerInterface {
 
     private void printAngebot() {
         System.out.println("Willkommen in der Pizzaria");
-        a.ausgeben();
+        AngebotsListePizza.ausgeben();
     }
 }

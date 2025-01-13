@@ -3,8 +3,8 @@ package exercise;
 public class Main {
     public static void main(String[] args) {
         String[] pizza ={"A", "B", "S"};
-        Angebot myAngebot = new Angebot(pizza);
-        CustomerInterface UI = new CustomerInterface(myAngebot);
+        Auswahl myAuswahl = new Auswahl(pizza);
+        CustomerInterface UI = new CustomerInterface(myAuswahl);
         UI.startBestellungsProzess();
 
     }
