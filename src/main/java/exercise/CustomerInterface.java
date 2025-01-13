@@ -3,32 +3,52 @@ package exercise;
 import java.util.Scanner;
 
 public class CustomerInterface {
+    public static Integer[] Bestellung;
 
     public static void Console (){
+        einlesenBestellung();
+    }
 
-        System.out.println("Willkommen in der Pizzaria");
+    private static void weitereBestellung() {
+        while (true){
+            System.out.println("Möchte Sie weitere Pizzen? \\n [1]Ja \\n [2]Nein");
+            Scanner myObj = new Scanner(System.in);
+            Integer auswahl  = myObj.nextInt();
+            if (auswahl == 2){
+                printBestellung();
+                break;
+            }
+            printAngebot();
+        }
+    }
 
+    private static void printBestellung() {
+        System.out.println(Bestellung.toString());
+    }
+
+    private static void einlesenBestellung() {
+        printAngebot();
+        System.out.println("Welche Pizza möchten Sie?");
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Bitte wählen Sie ihre Pizza");
-        System.out.println("0: Margaritha");
-        System.out.println("1: Salami");
-        System.out.println("2: Spinat");
-        System.out.println("3: Thunfisch");
+        Integer pizzaType = scanner.nextInt();
+        System.out.println("Wie viele möchten Sie?");
+        Integer pizzaAnzahl = scanner.nextInt();
+        Bestellung = new Integer[]{pizzaType,pizzaAnzahl};
+        weitereBestellung();
+    }
+    public static String getBestellung(){
+        Bestellung.to
+                return
+    }
 
-        int choice = scanner.nextInt();
-
-        if (choice == 0) {
-            System.out.println("You choose");
-            System.out.println(0);
+    private static void printAngebot() {
+        System.out.println("Willkommen in der Pizzaria");
+        String[] pizza ={"Magarhita", "Brokkoli", "Spinat"};
+        //int[] preis ={10, 11, 12};
+        for (int i = 0; i < pizza.length; i++) {
+            System.out.print(i);
+            System.out.println(pizza[i]);
+            //System.out.println(preis[i]);
         }
-        while(choice == 1) {
-            System.out.println("möchten Sie noch eine Pizza");
-            System.out.println("1: Ja");
-            System.out.println("2: Nein, zur Kasse");
-        }
-
-        choice = scanner.nextInt();
-
-        scanner.close();
     }
 }
