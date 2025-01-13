@@ -1,5 +1,7 @@
 package exercise;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class CustomerInterface {
@@ -11,7 +13,7 @@ public class CustomerInterface {
 
     private static void weitereBestellung() {
         while (true){
-            System.out.println("Möchte Sie weitere Pizzen? \\n [1]Ja \\n [2]Nein");
+            System.out.println("Möchte Sie weitere Pizzen? \n [1] Ja \n [2] Nein");
             Scanner myObj = new Scanner(System.in);
             Integer auswahl  = myObj.nextInt();
             if (auswahl == 2){
@@ -23,7 +25,7 @@ public class CustomerInterface {
     }
 
     private static void printBestellung() {
-        System.out.println(Bestellung.toString());
+        System.out.println(Arrays.toString(Bestellung));
     }
 
     private static void einlesenBestellung() {
@@ -36,9 +38,8 @@ public class CustomerInterface {
         Bestellung = new Integer[]{pizzaType,pizzaAnzahl};
         weitereBestellung();
     }
-    public static String getBestellung(){
-        Bestellung.to
-                return
+    public static void getBestellung(){
+        System.out.println(Bestellung.toString());
     }
 
     private static void printAngebot() {
@@ -47,6 +48,7 @@ public class CustomerInterface {
         //int[] preis ={10, 11, 12};
         for (int i = 0; i < pizza.length; i++) {
             System.out.print(i);
+            System.out.print(": \t");
             System.out.println(pizza[i]);
             //System.out.println(preis[i]);
         }
