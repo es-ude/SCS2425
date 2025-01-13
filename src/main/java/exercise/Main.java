@@ -5,7 +5,7 @@ public class Main {
         String[] pizza ={"A", "B", "S"};
         Auswahl myAuswahl = new Auswahl(pizza);
         CustomerInterface UI = new CustomerInterface(myAuswahl);
-        UI.startBestellungsProzess();
+        UI.startBestellungsProzess(); //Test
 
     }
 }
