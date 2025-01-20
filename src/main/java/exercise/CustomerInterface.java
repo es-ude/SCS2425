@@ -5,16 +5,26 @@ import java.util.Scanner;
 
 public class CustomerInterface {
     private Auswahl AngebotsListePizza;
+    private CustomerInterfaceContext CI = new CustomerInterfaceContext();
+    private CustomerInterfaceState State = null;
 
     public CustomerInterface(Auswahl auswahl){
         AngebotsListePizza = auswahl;
+        State = new WelcomeState(AngebotsListePizza);
     }
     public Integer[] Bestellung;
 
     public void startBestellungsProzess(){
-        printAngebot();
-        einlesenBestellung();
-        weitereBestellung();
+        Scanner inputScanner = new Scanner(System.in);
+
+        while(true) {
+            String CustomerKeyBoardInput = inputScanner.nextLine();
+            State = State.handleRequest(CustomerKeyBoardInput);
+        }
+
+//        printAngebot();
+//        einlesenBestellung();
+//        weitereBestellung();
     }
 
     private void weitereBestellung() {
@@ -29,17 +39,11 @@ public class CustomerInterface {
             printAngebot();
         }
     }
+
     private void printBestellung() {
         System.out.println(Arrays.toString(Bestellung));
     }
-    private void einlesenBestellung() {
-        System.out.println("Welche Pizza möchten Sie?");
-        Scanner scanner = new Scanner(System.in);
-        Integer pizzaType = scanner.nextInt();
-        System.out.println("Wie viele möchten Sie?");
-        Integer pizzaAnzahl = scanner.nextInt();
-        Bestellung = new Integer[]{pizzaType,pizzaAnzahl};
-    }
+
     public void getBestellung(){
         System.out.println(Bestellung.toString()); //TODO: ausgliedern in Bestellungs Klasse
     }
@@ -48,4 +52,5 @@ public class CustomerInterface {
         System.out.println("Willkommen in der Pizzaria");
         AngebotsListePizza.ausgeben();
     }
+
 }

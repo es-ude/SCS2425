@@ -36,13 +36,9 @@ public class App {
         // Dummy function
     }
 
-
     public static void main(String[] args) {
         Scanner inputScanner = new Scanner(System.in);
-
-        HashMap <String, String> userOrder = new HashMap<>();;
-        
-        // VARIABLES
+        HashMap <String, String> userOrder = new HashMap<>();
         String howToNavigate = """
         \nHere is how you can interact with the app:
         - type "m" to see the menu
