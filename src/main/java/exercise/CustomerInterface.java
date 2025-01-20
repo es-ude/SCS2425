@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 public class CustomerInterface {
     private Auswahl AngebotsListePizza;
-    private CustomerInterfaceContext CI = new CustomerInterfaceContext();
     private CustomerInterfaceState State = null;
 
     public CustomerInterface(Auswahl auswahl){
