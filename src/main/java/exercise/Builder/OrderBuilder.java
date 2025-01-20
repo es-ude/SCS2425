@@ -1,3 +1,5 @@
+package exercise.Builder;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -12,7 +14,7 @@ public class OrderBuilder {
     private String phonenumber = "";
     private String addressAddition = "";
 
-    OrderBuilder(Pricelist pricelist) {
+    public OrderBuilder(Pricelist pricelist) {
         this.pricelist = pricelist;
     };
 
